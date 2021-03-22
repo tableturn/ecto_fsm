@@ -34,7 +34,10 @@ defmodule Ecto.FSM.MachineTest do
     end
 
     test ".find_handler/1", %{locker: s} do
-      assert match?(Locker, Machine.find_handler({s, :one}))
+      # State unlocked is only state with no match all
+      s = %{s | status: :unlocked}
+
+      assert match?(Locker, Machine.find_handler({s, :lock}))
       assert match?(nil, Machine.find_handler({s, :non_existing_transition}))
     end
 

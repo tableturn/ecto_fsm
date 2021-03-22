@@ -163,7 +163,7 @@ defmodule Ecto.FSM do
       next_states = @to || unquote(next_states)
 
       @fsm Map.put(@fsm, {state_name, trans}, {__MODULE__, next_states})
-      @__states_names__ [state_name | @__states_names__] |> Enum.uniq()
+      @__states_names__ [state_name | @__states_names__] ++ next_states |> Enum.uniq()
 
       doc =
         __MODULE__

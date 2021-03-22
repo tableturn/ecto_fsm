@@ -71,4 +71,32 @@ defmodule Ecto.FSM.NotationTest do
       assert match?(%{:goto_s1 => ^mod}, mod.event_bypasses())
     end
   end
+
+
+  describe ".states_names/0" do
+    setup do
+      Code.compiler_options(ignore_module_conflict: true)
+
+      on_exit(fn ->
+        Code.compiler_options(ignore_module_conflict: false)
+      end)
+    end
+
+    test "...base states_names" do
+      {:module, mod, _, _} =
+        defmodule TestFsm do
+          use Ecto.FSM
+
+          transition s1({:goto_s2, nil}, s) do
+            {:next_state, :s2, s}
+          end
+
+          transition s2({:goto_s3, nil}, s) do
+            {:next_state, :s3, s}
+          end
+        end
+      
+      assert match?([:s1, :s2, :s3], mod.states_names() |> Enum.sort())
+    end
+  end
 end
